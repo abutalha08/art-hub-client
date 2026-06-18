@@ -131,7 +131,9 @@ export default function Navbar() {
 
           {!isLoggedIn ? (
             <>
-              <button className="text-sm text-gray-300">Login</button>
+              <Link href={"/login"}>
+              <button className="text-sm text-gray-300 cursor-pointer">Login</button>
+              </Link>
               <Link
                 href="/register"
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white text-sm"
@@ -260,9 +262,11 @@ export default function Navbar() {
                 </button>
               ) : (
                 <>
+                  <Link href={"/login"}>
                   <button className="px-4 py-3 rounded-xl text-sm font-medium text-[#8E8E9F] hover:text-white hover:bg-[#161622] transition text-left">
                     Login
                   </button>
+                  </Link>
 
                   <Link
                     href="/register"

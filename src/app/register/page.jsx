@@ -231,11 +231,7 @@ export default function RegisterPage() {
                   <Input
                     {...register("password", {
                       required: "Password is required",
-                      pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
-                        message:
-                          "Password must be at least 6 characters and contain at least one uppercase letter, one lowercase letter, and one number",
-                      },
+                      
                     })}
                     id="password"
                     type="password"
