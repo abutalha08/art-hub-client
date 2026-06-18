@@ -25,6 +25,10 @@ import { IoColorPaletteSharp } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
+import { uploadImage } from "@/utils/uploadImage";
+
 
 export default function RegisterPage() {
   const {
@@ -32,42 +36,41 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  console.log(errors);
-//   const onSubmit = (data) => console.log(data);
 
+//   console.log(errors);
 
 
    const onSubmit = async (data) => {
-        // Upload image to imgbb
         // console.log(data);
 
-        // const imageFile = data.image[0];
-        // const imageUrl = await uploadImage(imageFile)
+        const imageFile = data.image[0];
+        const imageUrl = await uploadImage(imageFile);
         // console.log(imageUrl);
+        
 
 
         const { data: signUpData, error: signUpError } = await authClient.signUp.email({
-            // email: data.email,
-            // password: data.password,
-            // name: data.name,
-            // image: imageUrl,
-            // role: data.role
+            email: data.email,
+            password: data.password,
+            name: data.name,
+            image: imageUrl,
+            role: data.role
 
-            ...data
+
         })
 
-        console.log(signUpData, signUpError);
+        // console.log(signUpData, signUpError);
 
-        // if (signUpError) {
-        //     toast.error("Registration not succeed...")
-        // }
-        // else {
-        //     redirect("/")
-        // }
+        if (signUpError) {
+            toast.error("Registration not succeed...")
+        }
+        else {
+            redirect("/")
+        }
 
 
     }
-    console.log(errors);
+    // console.log(errors);
 
   return (
     <motion.div
@@ -188,7 +191,7 @@ export default function RegisterPage() {
                 </motion.div>
 
                 {/* IMAGE */}
-                {/* <motion.div
+                <motion.div
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.3 }}
@@ -201,6 +204,7 @@ export default function RegisterPage() {
                     {...register("image", { required: "image is Required" })}
                     type="file"
                     accept="image/*"
+                  
                     id="image"
                     placeholder="https://example.com/avatar.jpg"
                     startContent={<FaImage className="text-[#52526B]" />}
@@ -209,7 +213,7 @@ export default function RegisterPage() {
                   {errors.image && (
                     <p className="text-red-500">{errors.image.message}</p>
                   )}
-                </motion.div> */}
+                </motion.div>
 
                 {/* PASSWORD */}
                 <motion.div
