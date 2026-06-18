@@ -26,11 +26,13 @@ import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { uploadImage } from "@/utils/uploadImage";
 
 
 export default function RegisterPage() {
+    const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -41,35 +43,38 @@ export default function RegisterPage() {
 
 
    const onSubmit = async (data) => {
-        // console.log(data);
 
-        const imageFile = data.image[0];
-        const imageUrl = await uploadImage(imageFile);
-        // console.log(imageUrl);
-        
+    // console.log(data);
 
 
-        const { data: signUpData, error: signUpError } = await authClient.signUp.email({
-            email: data.email,
-            password: data.password,
-            name: data.name,
-            image: imageUrl,
-            role: data.role
+  try {
+    const imageFile = data.image[0];
+    const imageUrl = await uploadImage(imageFile);
+    console.log(imageUrl);
 
+    const { data: signUpData, error: signUpError } =
+      await authClient.signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        image: imageUrl,
+        role: data.role,
+      });
 
-        })
+      console.log(signUpData, signUpError);
 
-        // console.log(signUpData, signUpError);
-
-        if (signUpError) {
-            toast.error("Registration not succeed...")
-        }
-        else {
-            redirect("/")
-        }
-
-
+    if (signUpError) {
+      toast.error(signUpError.message || "Registration failed");
+      return;
     }
+
+    toast.success("Registration successful");
+    router.push("/");
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong");
+  }
+};
     // console.log(errors);
 
   return (
