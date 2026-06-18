@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Input, Button, Link } from '@heroui/react';
+import { Input, Button } from '@heroui/react';
 import { 
   SiInstagram, 
   SiX, 
@@ -9,6 +9,7 @@ import {
   SiGithub 
 } from 'react-icons/si';
 import { IoColorPaletteSharp } from 'react-icons/io5';
+import Link from "next/link";
 
 export default function Footer() {
   const exploreLinks = [
