@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
+import { usePathname, useRouter } from "next/navigation";
 import { FiMenu, FiX, FiGrid, FiUser, FiLogOut } from "react-icons/fi";
 import { IoColorPaletteSharp } from "react-icons/io5";
 import Image from "next/image";
+import { authClient, useSession } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -14,20 +15,16 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const user = session?.user;
   const pathname = usePathname();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const dropdownRef = useRef(null);
-
-  const mockUser = {
-    name: "Jane Doe",
-    email: "jane@example.com",
-    role: "artist",
-    image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
-  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -61,10 +58,20 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setDropdownOpen(false);
-    setMobileOpen(false);
+  const handleLogout = async () => {
+    const loadingToast = toast.loading("Logging out...");
+
+    try {
+      await authClient.signOut();
+
+      toast.success("Logged out successfully!");
+      router.push("/");
+    } catch (error) {
+      toast.error("Logout failed!");
+      console.error("Logout failed:", error);
+    } finally {
+      toast.dismiss(loadingToast);
+    }
   };
 
   const isActive = (href) =>
@@ -75,17 +82,17 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
 
         {/* LOGO */}
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7928CA] to-[#B342F2] flex items-center justify-center">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7928CA] to-[#B342F2] flex items-center justify-center shadow-md shadow-[#7928CA]/20">
             <IoColorPaletteSharp className="text-white text-xl" />
           </div>
-          <span className="text-2xl font-bold text-white">
+          <span className="text-2xl font-serif font-bold text-white tracking-wide">
             Art<span className="text-[#B342F2]">Hub</span>
           </span>
         </Link>
 
         {/* NAV LINKS */}
-        <div className="hidden lg:flex items-center gap-2 bg-[#0C0C14] p-1 rounded-2xl">
+        <div className="hidden lg:flex items-center gap-2 bg-[#0C0C14] p-1 rounded-xl">
           {NAV_LINKS.map((link) => {
             const active = isActive(link.href);
 
@@ -93,195 +100,207 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition ${
-                  active ? "text-white" : "text-[#8E8E9F] hover:text-white"
+                className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition duration-200 ${
+                  active
+                    ? "text-white bg-[#201633] border border-[#432371]/60"
+                    : "text-[#8E8E9F] hover:text-white border border-transparent"
                 }`}
               >
-                {active && (
-                  <motion.span
-                    layoutId="activeNavPill"
-                    className="absolute inset-0 rounded-xl bg-[#201633] border border-[#432371]/60"
-                  />
-                )}
                 <span className="relative z-10">{link.label}</span>
               </Link>
             );
           })}
 
-          <Link
-            href="/dashboard"
-            className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition ${
-              pathname.startsWith("/dashboard")
-                ? "text-white"
-                : "text-[#8E8E9F] hover:text-white"
-            }`}
-          >
-            {pathname.startsWith("/dashboard") && (
-              <motion.span
-                layoutId="activeNavPill"
-                className="absolute inset-0 rounded-xl bg-[#201633] border border-[#432371]/60"
-              />
-            )}
-            <span className="relative z-10">Dashboard</span>
-          </Link>
+          {/* Dashboard only when logged in */}
+          {user && (
+            <Link
+              href="/dashboard"
+              className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition duration-200 ${
+                pathname.startsWith("/dashboard")
+                  ? "text-white bg-[#201633] border border-[#432371]/60"
+                  : "text-[#8E8E9F] hover:text-white border border-transparent"
+              }`}
+            >
+              <span className="relative z-10">Dashboard</span>
+            </Link>
+          )}
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="hidden lg:flex items-center gap-4">
-
-          {!isLoggedIn ? (
+        <div className="hidden lg:flex items-center gap-5">
+          {!user ? (
             <>
-              <Link href={"/login"}>
-              <button className="text-sm text-gray-300 cursor-pointer">Login</button>
+              <Link href="/login">
+                <button className="text-sm font-medium text-[#8E8E9F] hover:text-white transition cursor-pointer">
+                  Login
+                </button>
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white text-sm"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#7928CA] via-[#B342F2] to-[#F242C2] text-white text-sm font-semibold shadow-lg shadow-[#B342F2]/10 hover:shadow-[#B342F2]/20 transition duration-300"
               >
                 Sign Up
               </Link>
             </>
           ) : (
             <div className="relative" ref={dropdownRef}>
-
               {/* Avatar */}
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center"
+                className="flex items-center focus:outline-none transition transform hover:scale-105 active:scale-95"
               >
-                <Image
-                  src={mockUser.image}
-                  alt="avatar"
-                  width={38}
-                  height={38}
-                  className="rounded-full border-2 border-[#B342F2]"
-                />
+                <div className="relative w-9 h-9 rounded-full p-[2px] bg-gradient-to-tr from-[#7928CA] to-[#B342F2]">
+                  <Image
+                    src={
+                      session?.user?.image ||
+                      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
+                    }
+                    alt="avatar"
+                    width={36}
+                    height={36}
+                    className="w-full h-full object-cover rounded-full bg-[#12121C]"
+                  />
+                </div>
               </button>
 
               {/* DROPDOWN */}
-              <AnimatePresence>
-                {dropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-3 w-56 bg-[#161622] border border-[#27273A] rounded-xl p-2"
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-3 w-60 bg-[#12121C] border border-[#27273A] rounded-xl shadow-2xl p-1.5 text-sm z-50 text-slate-200">
+                  <div className="px-3 py-2.5 border-b border-[#27273A]/60 mb-1">
+                    <p className="text-[10px] font-bold text-[#B342F2] uppercase tracking-wider">
+                      {session?.user?.role || "User"}
+                    </p>
+                    <p className="text-white font-bold truncate mt-0.5">
+                      {session?.user?.name}
+                    </p>
+                    <p className="text-xs text-[#8E8E9F] truncate">
+                      {session?.user?.email}
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-2.5 px-3 py-2 hover:bg-[#161622] text-[#8E8E9F] hover:text-white rounded-lg transition"
                   >
-                    <div className="px-3 py-2 border-b border-[#27273A]">
-                      <p className="text-xs text-[#B342F2] uppercase">
-                        {mockUser.role}
-                      </p>
-                      <p className="text-white font-bold truncate">
-                        {mockUser.name}
-                      </p>
-                      <p className="text-xs text-gray-400 truncate">
-                        {mockUser.email}
-                      </p>
-                    </div>
+                    <FiGrid className="text-sm" /> Dashboard
+                  </Link>
 
-                    <Link
-                      href="/dashboard"
-                      className="flex items-center gap-2 px-3 py-2 hover:bg-[#1E1E30] rounded-lg"
-                    >
-                      <FiGrid /> Dashboard
-                    </Link>
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-2.5 px-3 py-2 hover:bg-[#161622] text-[#8E8E9F] hover:text-white rounded-lg transition"
+                  >
+                    <FiUser className="text-sm" /> Profile
+                  </Link>
 
-                    <Link
-                      href="/dashboard"
-                      className="flex items-center gap-2 px-3 py-2 hover:bg-[#1E1E30] rounded-lg"
-                    >
-                      <FiUser /> Profile
-                    </Link>
-
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-pink-400 hover:bg-pink-500/10 rounded-lg"
-                    >
-                      <FiLogOut /> Logout
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-[#F242C2] hover:bg-[#F242C2]/10 rounded-lg transition text-left font-medium mt-1 border-t border-[#27273A]/30"
+                  >
+                    <FiLogOut className="text-sm" /> Logout
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* MOBILE BUTTON */}
         <button
-          className="lg:hidden"
+          className="lg:hidden w-10 h-10 rounded-xl bg-[#12121C] border border-[#27273A]/60 flex items-center justify-center text-white text-xl transition"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <FiX /> : <FiMenu />}
         </button>
       </div>
 
-      {/* MOBILE MENU (FIXED) */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden px-4 py-4 flex flex-col gap-2 border-t border-[#27273A] bg-[#0C0C14]"
-          >
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={`px-4 py-3 rounded-xl text-sm font-medium transition ${
-                  isActive(link.href)
-                    ? "bg-[#201633] text-white border border-[#432371]/60"
-                    : "text-[#8E8E9F] hover:text-white hover:bg-[#161622]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+      {/* MOBILE MENU */}
+      {mobileOpen && (
+        <div className="lg:hidden px-2 pt-3 pb-4 flex flex-col gap-1.5 border-t border-[#27273A]/60 bg-[#0C0C14] overflow-hidden">
+          {/* USER INFO */}
+          {user && (
+            <div className="flex items-start gap-3 px-4 py-3 mb-2 bg-[#12121C] border border-[#27273A]/50 rounded-xl">
+              <div className="relative w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-[#7928CA] to-[#B342F2] flex-shrink-0 mt-0.5">
+                <Image
+                  src={
+                    session?.user?.image ||
+                    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
+                  }
+                  alt="avatar"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover rounded-full bg-[#12121C]"
+                />
+              </div>
+              <div className="truncate flex-1">
+                <p className="text-[9px] font-bold text-[#B342F2] uppercase tracking-wider leading-none">
+                  {session?.user?.role || "User"}
+                </p>
+                <p className="text-sm font-bold text-white truncate mt-1">
+                  {session?.user?.name}
+                </p>
+                <p className="text-xs text-[#8E8E9F] truncate mt-0.5">
+                  {session?.user?.email}
+                </p>
+              </div>
+            </div>
+          )}
 
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className={`px-4 py-3 rounded-xl text-sm font-medium transition ${
+                isActive(link.href)
+                  ? "bg-[#201633] text-white border border-[#432371]/60"
+                  : "text-[#8E8E9F] hover:text-white hover:bg-[#12121C]"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/*  Dashboard only when logged in */}
+          {user && (
             <Link
               href="/dashboard"
               onClick={() => setMobileOpen(false)}
               className={`px-4 py-3 rounded-xl text-sm font-medium transition ${
                 pathname.startsWith("/dashboard")
                   ? "bg-[#201633] text-white border border-[#432371]/60"
-                  : "text-[#8E8E9F] hover:text-white hover:bg-[#161622]"
+                  : "text-[#8E8E9F] hover:text-white hover:bg-[#12121C]"
               }`}
             >
               Dashboard
             </Link>
+          )}
 
-            <div className="mt-2 pt-3 border-t border-[#27273A] flex flex-col gap-2">
-
-              {isLoggedIn ? (
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-3 rounded-xl text-sm font-medium text-[#F242C2] hover:bg-[#F242C2]/10 transition text-left"
-                >
-                  Logout
-                </button>
-              ) : (
-                <>
-                  <Link href={"/login"}>
-                  <button className="px-4 py-3 rounded-xl text-sm font-medium text-[#8E8E9F] hover:text-white hover:bg-[#161622] transition text-left">
+          <div className="mt-1 pt-3 border-t border-[#27273A]/60 flex flex-col gap-2">
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-3 rounded-xl text-sm font-medium text-[#F242C2] hover:bg-[#F242C2]/10 transition text-left flex items-center gap-2"
+              >
+                <FiLogOut /> Logout
+              </button>
+            ) : (
+              <div className="grid grid-cols-2 gap-3 px-2">
+                <Link href="/login" onClick={() => setMobileOpen(false)}>
+                  <button className="w-full py-2.5 rounded-xl text-sm font-medium text-white bg-[#12121C] border border-[#27273A]/60 hover:bg-[#161622] transition">
                     Login
                   </button>
-                  </Link>
+                </Link>
 
-                  <Link
-                    href="/register"
-                    onClick={() => setMobileOpen(false)}
-                    className="px-4 py-3 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-[#8E32D9] via-[#B342F2] to-[#E032C4] text-center"
-                  >
+                <Link href="/register" onClick={() => setMobileOpen(false)}>
+                  <button className="w-full py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-[#7928CA] to-[#B342F2] shadow-md">
                     Sign Up
-                  </Link>
-                </>
-              )}
-
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  </button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
