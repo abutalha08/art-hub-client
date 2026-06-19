@@ -27,10 +27,10 @@ const MENU_BY_ROLE = {
     { key: "orders", label: "My Orders", icon: FaShoppingCart, href: "/dashboard/orders" },
   ],
   artist: [
-    { key: "overview", label: "Overview", icon: FaPalette, href: "/dashboard/overview" },
-    { key: "upload", label: "Upload Artwork", icon: FaPlus, href: "/dashboard/upload" },
-    { key: "my-artworks", label: "My Artworks", icon: FaImage, href: "/dashboard/my-artworks" },
-    { key: "sales", label: "Sales History", icon: FaShoppingCart, href: "/dashboard/sales" },
+    { key: "overview", label: "Overview", icon: FaPalette, href: "/dashboard/artist" },
+    { key: "add-artworks", label: "Add Artwork", icon: FaPlus, href: "/dashboard/artist/add-artworks" },
+    { key: "manage-artworks", label: "Manage Artworks", icon: FaImage, href: "/dashboard/artist/manage-artworks" },
+    { key: "sales", label: "Sales History", icon: FaShoppingCart, href: "/dashboard/artist/sales" },
   ],
   admin: [
     { key: "users", label: "Manage Users", icon: FaUsers, href: "/dashboard/users" },
