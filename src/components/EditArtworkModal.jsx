@@ -26,7 +26,7 @@ const EditArtworkModal = ({ isModalOpen, setIsModalOpen, editingEvent, loadArtwo
     formState: { errors },
   } = useForm();
 
-  // ডেটা সিঙ্ক এবং রিসেট করার জন্য
+  
   useEffect(() => {
     if (editingEvent && isModalOpen) {
       reset({
@@ -39,7 +39,7 @@ const EditArtworkModal = ({ isModalOpen, setIsModalOpen, editingEvent, loadArtwo
   }, [editingEvent, isModalOpen, reset]);
 
   const handleClose = () => {
-    setIsModalOpen(false); // প্যারেন্ট কম্পোনেন্টের স্টেটকে ফলস করবে
+    setIsModalOpen(false);
   };
 
   const onSubmit = async (data) => {
@@ -61,8 +61,8 @@ const EditArtworkModal = ({ isModalOpen, setIsModalOpen, editingEvent, loadArtwo
 
       if (result?.modifiedCount || result?.matchedCount) {
         toast.success("Artwork Updated successfully...");
-        handleClose(); // মোডাল ক্লোজ
-        if (loadArtworks) loadArtworks(); // রিফ্রেশ টেবিল ডেটা
+        handleClose(); 
+        if (loadArtworks) loadArtworks();
       } else {
         toast.error("No changes were made.");
       }
@@ -73,7 +73,7 @@ const EditArtworkModal = ({ isModalOpen, setIsModalOpen, editingEvent, loadArtwo
   };
 
   return (
-    // preventClose={false} এবং scrollBehavior নিশ্চিত করে যে মোডাল ক্লোজ হলে ব্যাকড্রপ স্ক্রিন লক করবে না
+    // preventClose={false} 
     <Modal 
       isOpen={isModalOpen} 
       onOpenChange={setIsModalOpen}

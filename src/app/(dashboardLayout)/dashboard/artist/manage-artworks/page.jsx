@@ -16,13 +16,12 @@ export default function ManageArtworkTable() {
   const [artworks, setArtworks] = useState([]);
   const [loadingArtworks, setLoadingArtworks] = useState(false);
 
- 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
 
   const handleEditClick = (artwork) => {
     setEditingEvent(artwork);
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   const loadArtworks = async () => {
@@ -56,17 +55,18 @@ export default function ManageArtworkTable() {
         </div>
       ) : (
         <div className="w-full">
-          
           {/*  MOBILE & SMALL DEVICES VIEW (কার্ড লেআউট) */}
           {/* মোবাইলে এটি গ্রিড হিসেবে সব ডেটা স্পষ্ট দেখাবে, বড় স্ক্রিনে (md:) লুকিয়ে যাবে */}
           <div className="grid grid-cols-1 gap-4 md:hidden">
             {artworks.map((artwork) => (
-              <div 
+              <div
                 key={artwork._id}
                 className="bg-[#0C0C14]/80 border border-[#27273A]/60 p-4 rounded-xl space-y-3"
               >
                 <div>
-                  <h4 className="font-bold text-white text-base">{artwork.title}</h4>
+                  <h4 className="font-bold text-white text-base">
+                    {artwork.title}
+                  </h4>
                   <p className="text-xs text-[#8E8E9F] mt-1 line-clamp-2">
                     {artwork.description}
                   </p>
@@ -74,12 +74,20 @@ export default function ManageArtworkTable() {
 
                 <div className="flex justify-between items-center text-sm border-t border-[#27273A]/30 pt-3">
                   <div>
-                    <span className="text-xs text-[#8E8E9F] block mb-0.5">Category</span>
-                    <span className="text-[#D1D1DB] font-medium">{artwork.category}</span>
+                    <span className="text-xs text-[#8E8E9F] block mb-0.5">
+                      Category
+                    </span>
+                    <span className="text-[#D1D1DB] font-medium">
+                      {artwork.category}
+                    </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-[#8E8E9F] block mb-0.5">Price</span>
-                    <span className="text-[#4ADE80] font-bold">${artwork.price}</span>
+                    <span className="text-xs text-[#8E8E9F] block mb-0.5">
+                      Price
+                    </span>
+                    <span className="text-[#4ADE80] font-bold">
+                      ${artwork.price}
+                    </span>
                   </div>
                 </div>
 
@@ -89,18 +97,17 @@ export default function ManageArtworkTable() {
                       {artwork.isApproved ? "Published" : "Pending"}
                     </Chip>
                   </div>
-                  
+
                   {/* ACTIONS */}
                   <div className="flex items-center gap-1">
                     <Tooltip content="Edit">
                       <Button
                         isIconOnly
-                        size="sm"
                         variant="light"
-                        className="text-[#8E8E9F] hover:text-white"
+                        className="min-w-9 w-9 h-9 rounded-xl text-[#A855F7] hover:bg-[#A855F7]/15 hover:text-white transition-all duration-300"
                         onPress={() => handleEditClick(artwork)}
                       >
-                        <FiEdit3 className="w-4 h-4" />
+                        <FiEdit3 size={18} />
                       </Button>
                     </Tooltip>
 
@@ -125,7 +132,9 @@ export default function ManageArtworkTable() {
                     <th className="p-4 text-xs text-[#8E8E9F]">Category</th>
                     <th className="p-4 text-xs text-[#8E8E9F]">Price</th>
                     <th className="p-4 text-xs text-[#8E8E9F]">Status</th>
-                    <th className="p-4 text-xs text-[#8E8E9F] text-right">Actions</th>
+                    <th className="p-4 text-xs text-[#8E8E9F] text-right">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
 
@@ -137,7 +146,9 @@ export default function ManageArtworkTable() {
                     >
                       <td className="p-4 text-white max-w-xs">
                         <div>
-                          <h4 className="font-semibold truncate">{artwork.title}</h4>
+                          <h4 className="font-semibold truncate">
+                            {artwork.title}
+                          </h4>
                           <p className="text-xs text-[#8E8E9F] truncate">
                             {artwork.description}
                           </p>
@@ -146,10 +157,15 @@ export default function ManageArtworkTable() {
 
                       <td className="p-4 text-[#D1D1DB]">{artwork.category}</td>
 
-                      <td className="p-4 text-[#4ADE80] font-semibold">${artwork.price}</td>
+                      <td className="p-4 text-[#4ADE80] font-semibold">
+                        ${artwork.price}
+                      </td>
 
                       <td className="p-4">
-                        <Chip size="sm" className="bg-[#B342F2]/15 text-[#D28CFF]">
+                        <Chip
+                          size="sm"
+                          className="bg-[#B342F2]/15 text-[#D28CFF]"
+                        >
                           {artwork.isApproved ? "Published" : "Pending"}
                         </Chip>
                       </td>
@@ -159,10 +175,11 @@ export default function ManageArtworkTable() {
                           <Tooltip content="Edit">
                             <Button
                               isIconOnly
-                              size="sm"
+                              variant="light"
+                              className="min-w-9 w-9 h-9 rounded-xl text-[#A855F7] hover:bg-[#A855F7]/15 hover:text-white transition-all duration-300"
                               onPress={() => handleEditClick(artwork)}
                             >
-                              <FiEdit3 />
+                              <FiEdit3 size={18} />
                             </Button>
                           </Tooltip>
 
@@ -178,7 +195,6 @@ export default function ManageArtworkTable() {
               </table>
             </div>
           </Card>
-
         </div>
       )}
 

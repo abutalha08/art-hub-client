@@ -28,10 +28,13 @@ const DeleteArtworkModal = ({ id, title }) => {
 
       {/* TRIGGER */}
       <AlertDialog.Trigger>
-        <Button className="h-[46px] px-6 rounded-xl bg-[#12121C] hover:bg-[#161622] text-[#F242C2] border border-[#27273A] font-bold transition-all">
-          <FiTrash2 className="text-[16px]" />
-          Delete
-        </Button>
+       <Button
+  isIconOnly
+  variant="light"
+  className="min-w-9 w-9 h-9 rounded-xl text-red-400 hover:bg-gradient-to-r hover:from-red-500/10 hover:to-rose-500/10 hover:text-red-300 transition-all duration-300"
+>
+  <FiTrash2 size={18} />
+</Button>
       </AlertDialog.Trigger>
 
       {/* BACKDROP */}
