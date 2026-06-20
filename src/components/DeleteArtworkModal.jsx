@@ -1,0 +1,105 @@
+import { AlertDialog, Button } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { deleteArtwork } from "@/lib/api/artworks/actions";
+import { FiTrash2 } from "react-icons/fi";
+
+const DeleteArtworkModal = ({ id, title }) => {
+  const router = useRouter();
+
+  const handleDeleteArtwork = async () => {
+    try {
+      const res = await deleteArtwork(id);
+
+      if (res?.deletedCount > 0) {
+        toast.success("Artwork deleted successfully");
+        router.refresh();
+      } else {
+        toast.error("Failed to delete artwork");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
+
+  return (
+    <AlertDialog>
+
+      {/* TRIGGER */}
+      <AlertDialog.Trigger>
+        <Button className="h-[46px] px-6 rounded-xl bg-[#12121C] hover:bg-[#161622] text-[#F242C2] border border-[#27273A] font-bold transition-all">
+          <FiTrash2 className="text-[16px]" />
+          Delete
+        </Button>
+      </AlertDialog.Trigger>
+
+      {/* BACKDROP */}
+      <AlertDialog.Backdrop className="backdrop-blur-sm bg-black/60">
+
+        <AlertDialog.Container>
+
+          <AlertDialog.Dialog className="sm:max-w-[420px] rounded-2xl border border-[#27273A] bg-[#0C0C14] text-white shadow-2xl shadow-[#B342F2]/20">
+
+            <AlertDialog.CloseTrigger />
+
+            {/* HEADER */}
+            <AlertDialog.Header>
+              <AlertDialog.Icon status="danger" />
+              <AlertDialog.Heading className="text-white font-bold text-xl">
+                Delete Artwork?
+              </AlertDialog.Heading>
+            </AlertDialog.Header>
+
+            {/* BODY */}
+            <AlertDialog.Body>
+
+              <p className="text-[#8E8E9F]">
+                Are you sure you want to delete{" "}
+                <strong className="text-white">{title}</strong>?
+              </p>
+
+              <p className="mt-3 text-sm text-[#8E8E9F]">
+                This action cannot be undone and will permanently remove it from ArtHub.
+              </p>
+
+              <div className="mt-4 p-3 rounded-xl bg-[#12121C] border border-[#27273A]">
+                <p className="text-xs text-[#F242C2] font-semibold">
+                  ⚠ Permanent deletion warning
+                </p>
+              </div>
+
+            </AlertDialog.Body>
+
+            {/* FOOTER */}
+            <AlertDialog.Footer className="flex gap-3 justify-end">
+
+              <Button
+              slot="close"
+                variant="tertiary"
+                className="text-[#8E8E9F] border border-[#27273A]"
+              >
+                Cancel
+              </Button>
+
+              <Button
+              slot="close"
+                onPress={handleDeleteArtwork}
+                className="bg-gradient-to-r from-[#F242C2] to-[#B342F2] text-white font-bold"
+              >
+                Delete
+              </Button>
+
+            </AlertDialog.Footer>
+
+          </AlertDialog.Dialog>
+
+        </AlertDialog.Container>
+
+      </AlertDialog.Backdrop>
+
+    </AlertDialog>
+  );
+};
+
+export default DeleteArtworkModal;
