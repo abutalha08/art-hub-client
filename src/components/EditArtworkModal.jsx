@@ -73,16 +73,22 @@ const EditArtworkModal = ({ isModalOpen, setIsModalOpen, editingEvent, loadArtwo
   };
 
   return (
-    // preventClose={false} 
     <Modal 
       isOpen={isModalOpen} 
       onOpenChange={setIsModalOpen}
+      /* onClose={handleClose} নিশ্চিত করে বাইরে ক্লিক করলে বা Esc চাপলে স্টেট ক্লিয়ার হবে */
+      onClose={handleClose}
       preventClose={false} 
       scrollBehavior="normal"
     >
-      <Modal.Backdrop onClick={handleClose}>
+      {/* Backdrop থেকে onClick={handleClose} সরিয়ে দেওয়া হয়েছে যেন Event Bubbling না ঘটে */}
+      <Modal.Backdrop>
         <Modal.Container>
-          <Modal.Dialog className="dark text-white bg-slate-950 border border-white/10 p-6 rounded-2xl w-full max-w-lg mx-auto relative">
+          {/* 🛑 ভেতরের ক্লিকে যেন বাবলিং হয়ে ব্যাকড্রপ ফায়ার না হয়, সেজন্য e.stopPropagation() দেওয়া হয়েছে */}
+          <Modal.Dialog 
+            onClick={(e) => e.stopPropagation()} 
+            className="dark text-white bg-slate-950 border border-white/10 p-6 rounded-2xl w-full max-w-lg mx-auto relative"
+          >
             
             {/* মোডাল ক্লোজ বাটন */}
             <button 
