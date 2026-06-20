@@ -114,7 +114,7 @@ export default function Navbar() {
           {/* Dashboard only when logged in */}
           {user && (
             <Link
-              href="/dashboard"
+              href= {`/dashboard/${session?.user?.role}`}
               className={`relative px-6 py-2.5 rounded-xl text-sm font-medium transition duration-200 ${
                 pathname.startsWith("/dashboard")
                   ? "text-white bg-[#201633] border border-[#432371]/60"
@@ -179,7 +179,7 @@ export default function Navbar() {
                   </div>
 
                   <Link
-                    href="/dashboard"
+                    href={`/dashboard/${session?.user?.role}`}
                     className="flex items-center gap-2.5 px-3 py-2 hover:bg-[#161622] text-[#8E8E9F] hover:text-white rounded-lg transition"
                   >
                     <FiGrid className="text-sm" /> Dashboard
