@@ -8,11 +8,11 @@ export const myArtworks = async (email) => {
 
   return result;
 };
-// export const fetchEvents = async (query) => {
-//   const result = await serverFetch(`/api/events?${query.toString()}`);
+export const fetchArtworks = async () => {
+  const result = await serverFetch(`/api/artworks`);
 
-//   return result;
-// };
+  return result;
+};
 // export const fetchFeaturedEvents = async () => {
 //   const result = await serverFetch(`/api/events/featured`);
 
