@@ -13,6 +13,8 @@ export const fetchArtworks = async () => {
 
   return result;
 };
+
+
 // export const fetchFeaturedEvents = async () => {
 //   const result = await serverFetch(`/api/events/featured`);
 

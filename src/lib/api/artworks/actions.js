@@ -32,3 +32,7 @@ export const getArtistStats = async (email) => {
 export const getUserProfile = async (email) => {
   return await serverFetch(`/api/users/${email}`);
 };
+
+export const buyArtwork = async (data) => {
+  return await serverMutation('/api/purchases', 'POST', data);
+};

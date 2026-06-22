@@ -1,113 +1,109 @@
 "use client";
 
 import { Card } from "@heroui/react";
-import { FiShoppingBag, FiAward, FiCalendar } from "react-icons/fi";
+import { FiShoppingBag, FiCalendar } from "react-icons/fi";
 import { useSession } from "@/lib/auth-client";
-import { FaCrown } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { getBuyerStats } from "@/lib/api/purchases/data";
 
 export default function UserDashboard() {
   const { data: session, isPending } = useSession();
   const user = session?.user;
 
-  // BetterAuth ডাটাবেজ থেকে ডাইনামিকালি প্রিমিয়াম স্ট্যাটাস রিড করা হচ্ছে
-  const isPremium = user?.isPremium || false; 
+  const [totalCollection, setTotalCollection] = useState(0);
+
+  // ✅ FETCH BUYER STATS (ONLY TOTAL COLLECTION)
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!user?.email) return;
+
+      try {
+        const data = await getBuyerStats(user.email);
+        setTotalCollection(data?.totalCollection || 0);
+      } catch (error) {
+        console.log("BUYER_STATS_ERROR:", error);
+      }
+    };
+
+    fetchStats();
+  }, [user]);
 
   if (isPending) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-[#0A0A0F]">
-        <div className="w-8 h-8 border-4 border-[#D946EF] border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-[60vh] flex items-center justify-center bg-[#050508] text-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-neutral-400 font-semibold tracking-wide">
+            Loading premium dashboard...
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 p-4 sm:p-6 lg:p-10 text-white min-h-screen bg-[#0A0A0F]">
-      
-      {/* Welcome Header */}
-      <div className="space-y-1.5">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide leading-tight">
-          Welcome Back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-[#D946EF] font-sans font-bold">{user?.name || "Collector"}</span>
+    <div className="p-6 md:p-12 space-y-10 bg-[#050508] min-h-screen text-white selection:bg-purple-500/30">
+      {/* DASHBOARD HEADER */}
+      <div className="space-y-2 max-w-7xl mx-auto">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
+          Welcome Back,{" "}
+          <span className="relative inline-block bg-gradient-to-r from-purple-400 to-indigo-500 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.25)] animate-pulse [animation-duration:5s] tracking-wide opacity-95">
+            {user?.name || "Collector"}
+          </span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
-          Explore your curated digital gallery, manage premium art subscriptions, and update your collector profile.
+        <p className="text-base text-neutral-400 max-w-xl font-medium">
+          Here is a premium overview of your curated art collection and journey.
         </p>
       </div>
 
-      {/* Analytics/Stat Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        
-        {/* Total Purchases */}
-        <Card className="bg-[#111119] border border-white/[0.05] p-5 sm:p-6 rounded-2xl flex flex-row items-center gap-4 sm:gap-5 shadow-xl">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-fuchsia-500/10 text-[#D946EF] shrink-0">
-            <FiShoppingBag className="text-xl sm:text-2xl" />
-          </div>
-          <div>
-            <p className="text-[11px] sm:text-xs text-slate-500 uppercase tracking-widest font-semibold">Total Collection</p>
-            {/* এখানে পরবর্তীতে ডাইনামিক পারচেজ কাউন্ট বসবে */}
-            <p className="text-xl sm:text-2xl font-bold mt-0.5 tracking-tight">0 Artworks</p> 
-          </div>
-        </Card>
+      {/* STATS CARDS CONTAINER (MASSIVE & PASHAPASHI) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        {/* TOTAL COLLECTION CARD */}
+        <div className="relative group rounded-3xl p-[1px] bg-gradient-to-b from-neutral-800 to-transparent hover:from-purple-500 hover:to-purple-900 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+          <Card className="p-8 flex flex-row items-center gap-6 bg-[#0e0e16]/90 backdrop-blur-xl rounded-[23px] border-none h-full transition-all duration-500 group-hover:bg-[#0e0e16]/70">
+            {/* Purple Icon Container */}
+            <div className="p-5 bg-purple-500/10 rounded-2xl border border-purple-500/20 group-hover:scale-105 group-hover:bg-purple-500/20 group-hover:border-purple-400/40 transition-all duration-300 shadow-[0_0_20px_rgba(168,85,247,0.05)]">
+              <FiShoppingBag className="text-4xl text-purple-400 group-hover:text-purple-300 transition-colors" />
+            </div>
 
-        {/* Current Subscription Tier */}
-        <Card className="bg-[#111119] border border-white/[0.05] p-5 sm:p-6 rounded-2xl flex flex-row items-center gap-4 sm:gap-5 shadow-xl">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-indigo-500/10 text-indigo-400 shrink-0">
-            <FiAward className="text-xl sm:text-2xl" />
-          </div>
-          <div>
-            <p className="text-[11px] sm:text-xs text-slate-500 uppercase tracking-widest font-semibold">Membership Tier</p>
-            <p className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 mt-0.5 capitalize tracking-tight">
-              {isPremium ? "Premium Elite" : "Free Plan"}
-            </p>
-          </div>
-        </Card>
-
-        {/* Dynamic Join Date */}
-        <Card className="bg-[#111119] border border-white/[0.05] p-5 sm:p-6 rounded-2xl flex flex-row items-center gap-4 sm:gap-5 shadow-xl sm:col-span-2 lg:col-span-1">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
-            <FiCalendar className="text-xl sm:text-2xl" />
-          </div>
-          <div>
-            <p className="text-[11px] sm:text-xs text-slate-500 uppercase tracking-widest font-semibold">Collector Since</p>
-            <p className="text-base sm:text-lg font-medium mt-0.5 text-slate-200">
-              {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : "June 2026"}
-            </p>
-          </div>
-        </Card>
-      </div>
-
-      {/* Premium Banner Section */}
-      <div className="pt-2">
-        <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4">Account Status</h3>
-        
-        {!isPremium ? (
-          <Card className="border border-[#B342F2]/20 bg-gradient-to-br from-[#7928CA]/10 via-[#B342F2]/5 to-transparent rounded-2xl overflow-hidden shadow-2xl">
-            <div className="p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div className="space-y-1">
-                <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 tracking-wide">
-                  <FaCrown className="text-yellow-400 animate-pulse text-xl" />
-                  Upgrade to Collector Pro
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
-                  Unlock unlimited artwork purchases (Free plan limit: 3), advanced acquisition analytics, and exclusive VIP access to premium art masterclasses.
-                </p>
-              </div>
-
-              <button className="w-full md:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-[#7928CA] to-[#B342F2] text-white text-xs uppercase tracking-wider font-bold hover:opacity-90 active:scale-[0.98] transition-all duration-300 shadow-[0_4px_15px_rgba(179,66,242,0.25)] shrink-0">
-                Upgrade Now
-              </button>
+            <div className="space-y-1">
+              <p className="text-xs font-bold tracking-widest text-purple-400/80 uppercase">
+                Total Collection
+              </p>
+              <p className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                {totalCollection}{" "}
+                <span className="text-lg font-medium text-neutral-400 group-hover:text-neutral-300 transition-colors">
+                  Artworks
+                </span>
+              </p>
             </div>
           </Card>
-        ) : (
-          <Card className="border border-emerald-500/15 bg-[#111119] rounded-2xl shadow-xl overflow-hidden relative">
-            <div className="absolute top-0 left-0 h-full w-1 bg-emerald-500" />
-            <div className="p-5 sm:p-6 text-xs sm:text-sm font-medium text-emerald-400 flex items-center gap-2.5">
-              <FaCrown className="text-yellow-400 text-base shrink-0" />
-              <span>🎉 You are verified as a Premium Elite Collector. Enjoy absolute unlimited purchasing capabilities!</span>
+        </div>
+
+        {/* COLLECTOR SINCE CARD */}
+        <div className="relative group rounded-3xl p-[1px] bg-gradient-to-b from-neutral-800 to-transparent hover:from-purple-600 hover:to-neutral-800 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+          <Card className="p-8 flex flex-row items-center gap-6 bg-[#0e0e16]/90 backdrop-blur-xl rounded-[23px] border-none h-full transition-all duration-500 group-hover:bg-[#0e0e16]/70">
+            {/* White/Purple Glossy Icon Container */}
+            <div className="p-5 bg-neutral-100/5 rounded-2xl border border-neutral-700 group-hover:scale-105 group-hover:bg-purple-500/10 group-hover:border-purple-500/40 transition-all duration-300">
+              <FiCalendar className="text-4xl text-neutral-400 group-hover:text-purple-400 transition-colors" />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-bold tracking-widest text-neutral-400 uppercase">
+                Collector Since
+              </p>
+              <p className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-neutral-100 via-neutral-200 to-neutral-400 bg-clip-text text-transparent tracking-tight">
+                {user?.createdAt
+                  ? new Date(user.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "N/A"}
+              </p>
             </div>
           </Card>
-        )}
+        </div>
       </div>
-
     </div>
   );
 }
