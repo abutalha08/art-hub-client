@@ -23,14 +23,16 @@ import { useSession } from "@/lib/auth-client";
 const MENU_BY_ROLE = {
   user: [
     { key: "overview", label: "Overview", icon: FaUserCircle, href: "/dashboard/overview" },
-    { key: "favorites", label: "Favorite Artworks", icon: FaHeart, href: "/dashboard/favourite" },
-    { key: "orders", label: "My Orders", icon: FaShoppingCart, href: "/dashboard/orders" },
+    { key: "Purchase History", label: "Purchase History", icon: FaHeart, href: "/dashboard/purchase-history" },
+    { key: "Bought Artworks", label: "Bought Artworks", icon: FaShoppingCart, href: "/dashboard/bought-artworks" },
+    { key: "Profile Management", label: "Profile Management", icon: FaShoppingCart, href: "/dashboard/profile-management" },
   ],
   artist: [
     { key: "overview", label: "Overview", icon: FaPalette, href: "/dashboard/artist" },
     { key: "add-artworks", label: "Add Artwork", icon: FaPlus, href: "/dashboard/artist/add-artworks" },
     { key: "manage-artworks", label: "Manage Artworks", icon: FaImage, href: "/dashboard/artist/manage-artworks" },
     { key: "sales", label: "Sales History", icon: FaShoppingCart, href: "/dashboard/artist/sales" },
+    { key: "profile", label: "Artist Profile", icon: FaShoppingCart, href: "/dashboard/artist/profile" },
   ],
   admin: [
     { key: "users", label: "Manage Users", icon: FaUsers, href: "/dashboard/users" },

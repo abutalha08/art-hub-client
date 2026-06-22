@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { deleteMutation, serverMutation } from '../server';
+import { deleteMutation, serverMutation, serverFetch, } from '../server';
 
 export const addArtwork = async (data) => {
   const resData = await serverMutation('/api/artworks', 'POST', data);
@@ -19,4 +19,16 @@ export const deleteArtwork = async (id) => {
   const resData = await deleteMutation(`/api/artworks/${id}`);
   revalidatePath('/dashboard/artists/manage-artworks');
   return resData;
+};
+
+export const getArtistStats = async (email) => {
+  const resData = await serverFetch(
+    `/api/artist-stats/${email}`
+  );
+
+  return resData;
+};
+
+export const getUserProfile = async (email) => {
+  return await serverFetch(`/api/users/${email}`);
 };
