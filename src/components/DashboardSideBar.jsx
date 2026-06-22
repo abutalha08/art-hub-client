@@ -22,10 +22,10 @@ import { useSession } from "@/lib/auth-client";
 
 const MENU_BY_ROLE = {
   user: [
-    { key: "overview", label: "Overview", icon: FaUserCircle, href: "/dashboard/overview" },
-    { key: "Purchase History", label: "Purchase History", icon: FaHeart, href: "/dashboard/purchase-history" },
-    { key: "Bought Artworks", label: "Bought Artworks", icon: FaShoppingCart, href: "/dashboard/bought-artworks" },
-    { key: "Profile Management", label: "Profile Management", icon: FaShoppingCart, href: "/dashboard/profile-management" },
+    { key: "overview", label: "Overview", icon: FaUserCircle, href: "/dashboard/buyer" },
+    { key: "Purchase History", label: "Purchase History", icon: FaHeart, href: "/dashboard/buyer/purchase-history" },
+    { key: "Bought Artworks", label: "Bought Artworks", icon: FaShoppingCart, href: "/dashboard/buyer/bought-artworks" },
+    { key: "Profile Management", label: "Profile Management", icon: FaShoppingCart, href: "/dashboard/buyer/profile" },
   ],
   artist: [
     { key: "overview", label: "Overview", icon: FaPalette, href: "/dashboard/artist" },
