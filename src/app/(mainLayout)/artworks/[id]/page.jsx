@@ -163,7 +163,8 @@ export default async function ArtworkDetailsPage({ params }) {
             <div className="pt-6">
               <BuyNowWidget
                 price={artwork?.price}
-                availableStock={artwork?.availableStock || 10}
+                artworkId={artwork?._id}
+               
               />
             </div>
 

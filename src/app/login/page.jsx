@@ -19,9 +19,13 @@ import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
+  // console.log("Redirecting to", redirectTo); 
   const router = useRouter();
 
   const {
@@ -52,7 +56,7 @@ export default function LoginPage() {
       }
 
       toast.success("Login successful");
-      router.push("/");
+      router.push(redirectTo);
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong");
@@ -223,7 +227,7 @@ export default function LoginPage() {
               <p className="text-center text-sm text-[#8E8E9F] mt-6">
                 Don't have an account?{" "}
                 <Link
-                  href="/register"
+                  href={`/register?redirect=${redirectTo}`}
                   className="text-[#B342F2] hover:text-[#F242C2] font-semibold transition"
                 >
                   Sign Up
