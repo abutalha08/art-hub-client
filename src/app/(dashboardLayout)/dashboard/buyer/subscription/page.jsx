@@ -89,54 +89,54 @@ export default function SubscriptionPricing() {
 
       {/* PRICING CARDS CONTAINER (RENDERED DYNAMICALLY) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto w-full">
-        {subscriptionPlans.map((plan) => (
+        {subscriptionPlans.map((subscription) => (
           <div
-            key={plan.id}
-            className={`relative group rounded-3xl p-[1px] bg-gradient-to-b from-neutral-800 to-transparent ${plan.borderGradient} transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)]`}
+            key={subscription.id}
+            className={`relative group rounded-3xl p-[1px] bg-gradient-to-b from-neutral-800 to-transparent ${subscription.borderGradient} transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)]`}
           >
             <Card className="p-8 flex flex-col justify-between bg-[#0e0e16]/90 backdrop-blur-xl rounded-[23px] border-none h-full min-h-[440px] transition-all duration-500 group-hover:bg-[#0e0e16]/70">
               <div className="space-y-6">
                 {/* Icon & Badge */}
                 <div className="flex justify-between items-start">
                   <div
-                    className={`p-4 rounded-2xl border group-hover:scale-105 transition-all duration-300 ${plan.iconContainerBg}`}
+                    className={`p-4 rounded-2xl border group-hover:scale-105 transition-all duration-300 ${subscription.iconContainerBg}`}
                   >
-                    {plan.icon}
+                    {subscription.icon}
                   </div>
                   <span
                     className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${
-                      plan.popular
+                      subscription.popular
                         ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                        : plan.name === "Premium"
+                        : subscription.name === "Premium"
                           ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-transparent"
                           : "bg-neutral-800 text-neutral-400 border-neutral-700"
                     }`}
                   >
-                    {plan.badgeText}
+                    {subscription.badgeText}
                   </span>
                 </div>
 
                 {/* Pricing Name & Amount */}
                 <div className="space-y-1">
                   <p
-                    className={`text-xs font-bold tracking-widest uppercase ${plan.name === "Free" ? "text-neutral-400" : "text-purple-400"}`}
+                    className={`text-xs font-bold tracking-widest uppercase ${subscription.name === "Free" ? "text-neutral-400" : "text-purple-400"}`}
                   >
-                    {plan.name}
+                    {subscription.name}
                   </p>
                   <p className="text-4xl font-black text-white tracking-tight">
-                    {plan.price}{" "}
+                    {subscription.price}{" "}
                     <span className="text-sm font-normal text-neutral-500">
-                      {plan.period}
+                      {subscription.period}
                     </span>
                   </p>
                   <p className="text-xs text-neutral-400/80 font-medium pt-1 leading-relaxed">
-                    {plan.description}
+                    {subscription.description}
                   </p>
                 </div>
 
                 {/* Features Line */}
                 <div className="space-y-3 pt-2">
-                  {plan.features.map((feature, idx) => {
+                  {subscription.features.map((feature, idx) => {
                     // Highlight dynamic terms like "Unlimited", "3 paintings", or "9 paintings"
                     const isHighlight =
                       feature.includes("Unlimited") ||
@@ -148,7 +148,7 @@ export default function SubscriptionPricing() {
                         className="flex items-center gap-3 text-neutral-300"
                       >
                         <FiCheck
-                          className={`${plan.name === "Free" ? "text-neutral-500" : "text-purple-400"} text-xl flex-shrink-0`}
+                          className={`${subscription.name === "Free" ? "text-neutral-500" : "text-purple-400"} text-xl flex-shrink-0`}
                         />
                         <p className="text-sm font-medium">
                           {isHighlight ? (
@@ -173,14 +173,15 @@ export default function SubscriptionPricing() {
               {/* Action Button */}
 
               <form action="/api/checkout_sessions" method="POST">
+              <input type="hidden" name="subscription_id" value={subscription.id} />
                 <section>
                   <button
                     type="submit"
                     role="link"
                     className={`w-full mt-8 py-6 font-bold rounded-xl transition-all duration-300 ${
-                      plan.name === "Free"
+                      subscription.name === "Free"
                         ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300 border border-neutral-700"
-                        : plan.name === "Premium"
+                        : subscription.name === "Premium"
                           ? "bg-white text-black hover:bg-neutral-200"
                           : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white shadow-[0_4px_20px_rgba(168,85,247,0.2)]"
                     }`}
