@@ -5,6 +5,7 @@ import { FiHeart, FiShare2, FiCheckCircle } from "react-icons/fi";
 import { baseURL } from "@/lib/api/baseUrl";
 
 import BuyNowWidget from "@/components/BuyNowWidget";
+import CommentSection from "@/components/CommentSection";
 
 /* ---------------- Fetch Function ---------------- */
 const fetchArtwork = async (id) => {
@@ -167,6 +168,8 @@ export default async function ArtworkDetailsPage({ params }) {
                
               />
             </div>
+
+            <CommentSection artworkId={artwork._id} />
 
           </div>
 

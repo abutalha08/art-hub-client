@@ -39,6 +39,7 @@ export default function BuyNowWidget({
 
       if (result.success) {
         toast.success("Artwork purchased successfully!");
+        router.refresh()
       } else {
         toast.error(result.message || "Purchase failed");
       }
