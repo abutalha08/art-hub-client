@@ -34,7 +34,7 @@ export default function UserDashboard() {
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-sm text-neutral-400 font-semibold tracking-wide">
-            Loading premium dashboard...
+            Loading  dashboard...
           </p>
         </div>
       </div>
@@ -52,7 +52,7 @@ export default function UserDashboard() {
           </span>
         </h1>
         <p className="text-base text-neutral-400 max-w-xl font-medium">
-          Here is a premium overview of your curated art collection and journey.
+          Here is a overview of your curated art collection and journey.
         </p>
       </div>
 
@@ -71,7 +71,7 @@ export default function UserDashboard() {
                 Total Collection
               </p>
               <p className="text-3xl md:text-4xl font-black text-white tracking-tight">
-                {totalCollection}{" "}
+                {totalCollection}{" "} out of 3 {" "}
                 <span className="text-lg font-medium text-neutral-400 group-hover:text-neutral-300 transition-colors">
                   Artworks
                 </span>

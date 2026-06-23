@@ -2,9 +2,12 @@
 
 import { useSession } from "@/lib/auth-client";
 import { buyArtwork } from "@/lib/api/artworks/actions";
+// import { getBuyerStats } from "@/lib/api/artworks/actions";
 import { Card } from "@heroui/react";
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { getBuyerStats } from "@/lib/api/purchases/data";
 
 export default function BuyNowWidget({
   price = 0,
@@ -17,16 +20,50 @@ export default function BuyNowWidget({
 
   const user = session?.user;
 
+  // subscription plan (FREE)
+  const plan = {
+    name: "free",
+    maxPurchase: 5,
+  };
+
+  const [purchaseCount, setPurchaseCount] = useState(0);
+
+  // ✅ REAL API CALL
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!user?.email) return;
+
+      try {
+        const data = await getBuyerStats(user.email);
+
+        setPurchaseCount(data.totalCollection || 0);
+      } catch (error) {
+        console.error("Failed to fetch buyer stats:", error);
+        setPurchaseCount(0);
+      }
+    };
+
+    fetchStats();
+  }, [user]);
+
+  const isBuyer = user?.role === "buyer";
+
+  const isLimitReached = purchaseCount >= plan.maxPurchase;
+
   const handleBuy = async () => {
-    // Login check
     if (!user) {
       router.push(`/login?redirect=${pathname}`);
       return;
     }
 
-    // Role check
     if (user.role !== "buyer") {
       toast.warning("Only buyers can purchase this artwork");
+      return;
+    }
+
+    // ❌ BLOCK IF LIMIT REACHED
+    if (isLimitReached) {
+      toast.error("Purchase limit reached. Upgrade your plan.");
       return;
     }
 
@@ -39,7 +76,7 @@ export default function BuyNowWidget({
 
       if (result.success) {
         toast.success("Artwork purchased successfully!");
-        router.refresh()
+        router.refresh();
       } else {
         toast.error(result.message || "Purchase failed");
       }
@@ -49,11 +86,10 @@ export default function BuyNowWidget({
     }
   };
 
-  const isBuyer = user?.role === "buyer";
-
   return (
     <Card className="w-full bg-[#111119] border border-white/10 rounded-2xl p-5 sm:p-6">
       <div className="space-y-5">
+
         {/* Price */}
         <div className="flex items-center justify-between">
           <span className="text-sm text-slate-400">
@@ -65,7 +101,7 @@ export default function BuyNowWidget({
           </span>
         </div>
 
-        {/* Not Logged In */}
+        {/* LOGIN */}
         {!user && (
           <button
             onClick={() =>
@@ -77,8 +113,8 @@ export default function BuyNowWidget({
           </button>
         )}
 
-        {/* Buyer */}
-        {user && isBuyer && (
+        {/* BUY BUTTON (ONLY IF LIMIT NOT REACHED) */}
+        {user && isBuyer && !isLimitReached && (
           <button
             onClick={handleBuy}
             className="w-full h-12 bg-gradient-to-r from-[#7928CA] via-[#B342F2] to-[#F242C2] text-white font-semibold rounded-xl transition hover:opacity-90 active:scale-[0.98]"
@@ -87,12 +123,30 @@ export default function BuyNowWidget({
           </button>
         )}
 
-        {/* Artist/Admin */}
+        {/* LIMIT REACHED UI */}
+        {user && isBuyer && isLimitReached && (
+          <div className="w-full min-h-12 flex flex-col items-center justify-center bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 text-center">
+            <p>🚫 Purchase limit reached</p>
+            <p className="text-xs text-slate-400 mt-1">
+              Upgrade to Pro or Premium to continue buying
+            </p>
+          </div>
+        )}
+
+        {/* ARTIST / ADMIN */}
         {user && !isBuyer && (
           <div className="w-full min-h-12 flex items-center justify-center bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 text-center">
             Only buyers can purchase artworks
           </div>
         )}
+
+        {/* DEBUG (optional remove later) */}
+        {user && isBuyer && (
+          <p className="text-xs text-slate-500 text-center">
+            {purchaseCount} / {plan.maxPurchase} artworks purchased
+          </p>
+        )}
+
       </div>
     </Card>
   );
