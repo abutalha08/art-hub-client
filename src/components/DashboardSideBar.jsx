@@ -14,18 +14,22 @@ import {
   FaSignOutAlt,
   FaHome,
   FaBars,
+  FaHistory,
 } from "react-icons/fa";
 import { Button, Drawer } from "@heroui/react";
 import Logo from "./Logo";
 import Image from "next/image";
 import { useSession } from "@/lib/auth-client";
+import { MdDashboard, MdOutlineSubscriptions } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
 
 const MENU_BY_ROLE = {
   user: [
-    { key: "overview", label: "Overview", icon: FaUserCircle, href: "/dashboard/buyer" },
-    { key: "Purchase History", label: "Purchase History", icon: FaHeart, href: "/dashboard/buyer/purchase-history" },
+    { key: "overview", label: "Overview", icon: MdDashboard, href: "/dashboard/buyer" },
+    { key: "Purchase History", label: "Purchase History", icon: FaHistory, href: "/dashboard/buyer/purchase-history" },
     { key: "Bought Artworks", label: "Bought Artworks", icon: FaShoppingCart, href: "/dashboard/buyer/bought-artworks" },
-    { key: "Profile Management", label: "Profile Management", icon: FaShoppingCart, href: "/dashboard/buyer/profile" },
+    { key: "Profile Management", label: "Profile Management", icon: CgProfile, href: "/dashboard/buyer/profile" },
+    { key: "Subscription Tier Overview", label: "Subscription Tier Overview", icon: MdOutlineSubscriptions , href: "/dashboard/buyer/subscription" },
   ],
   artist: [
     { key: "overview", label: "Overview", icon: FaPalette, href: "/dashboard/artist" },
