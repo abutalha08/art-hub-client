@@ -38,6 +38,10 @@ export default function ManageArtworkTable() {
     }
   };
 
+  const handleArtworkDeleted = (deletedId) => {
+    setArtworks((prev) => prev.filter((artwork) => artwork._id !== deletedId));
+  };
+
   useEffect(() => {
     loadArtworks();
   }, [session]);
@@ -81,7 +85,7 @@ export default function ManageArtworkTable() {
                       {artwork.category}
                     </span>
                   </div>
-                  
+
                   {/* এই অংশটি নতুন যোগ করা হয়েছে মোবাইলে ডেট দেখানোর জন্য */}
                   <div>
                     <span className="text-[10px] text-[#8E8E9F] block mb-0.5">
@@ -89,11 +93,14 @@ export default function ManageArtworkTable() {
                     </span>
                     <span className="text-[#D1D1DB] text-xs block font-medium">
                       {artwork.createdAt
-                        ? new Date(artwork.createdAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "2-digit", // ছোট স্ক্রিনের জন্য শর্ট বছর (যেমন: '26)
-                          })
+                        ? new Date(artwork.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "2-digit", // ছোট স্ক্রিনের জন্য শর্ট বছর (যেমন: '26)
+                            },
+                          )
                         : "N/A"}
                     </span>
                   </div>
@@ -131,6 +138,7 @@ export default function ManageArtworkTable() {
                     <DeleteArtworkModal
                       id={artwork._id}
                       title={artwork.title}
+                      onSuccess={() => handleArtworkDeleted(artwork._id)}
                     />
                   </div>
                 </div>
@@ -215,6 +223,7 @@ export default function ManageArtworkTable() {
                           <DeleteArtworkModal
                             id={artwork._id}
                             title={artwork.title}
+                            onSuccess={() => handleArtworkDeleted(artwork._id)}
                           />
                         </div>
                       </td>
