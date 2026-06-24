@@ -94,19 +94,31 @@ const MENU_BY_ROLE = {
       key: "users",
       label: "Manage Users",
       icon: FaUsers,
-      href: "/dashboard/users",
+      href: "/dashboard/admin",
     },
     {
-      key: "artworks",
-      label: "Approve Artworks",
+      key: "Manage All Artworks",
+      label: "Manage All Artworks",
       icon: FaImage,
-      href: "/dashboard/artworks",
+      href: "/dashboard/admin/manage-all-artworks", // অথবা তোমার রাউট অনুযায়ী
     },
     {
-      key: "reports",
-      label: "Reports & Analytics",
+      key: "View All Transactions",
+      label: "View All Transactions",
       icon: FaUserShield,
-      href: "/dashboard/reports",
+      href: "/dashboard/admin/view-transactions",
+    },
+    {
+      key: "Analytics Overview",
+      label: "Analytics Overview",
+      icon: FaUserShield,
+      href: "/dashboard/admin/analytics-overview",
+    },
+    {
+      key: "Charts",
+      label: "Charts",
+      icon: FaUserShield,
+      href: "/dashboard/admin/Charts",
     },
   ],
 };
@@ -116,7 +128,6 @@ export default function DashboardSidebar() {
   const role = session?.user?.role;
 
   const pathname = usePathname();
-
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -124,7 +135,6 @@ export default function DashboardSidebar() {
 
     try {
       await authClient.signOut();
-
       toast.success("Logged out successfully!");
       router.push("/");
     } catch (error) {
@@ -136,12 +146,6 @@ export default function DashboardSidebar() {
   };
 
   const menuItems = MENU_BY_ROLE[role] || MENU_BY_ROLE.user;
-
-  const getPath = (key) => {
-    if (role === "admin") return `/dashboard/admin/${key}`;
-    if (key === "overview") return `/dashboard/${role}`;
-    return `/dashboard/${role}/${key}`;
-  };
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col bg-gradient-to-b from-[#0B0B12] via-[#0C0C14] to-[#0A0A10] text-white">
@@ -185,8 +189,8 @@ export default function DashboardSidebar() {
         </p>
 
         {menuItems.map(({ key, label, icon: Icon, href }) => {
-          const target = getPath(key);
-          const active = pathname === target;
+          // ✅ প্রতিটি লিংকের নিজস্ব href এর সাথে বর্তমান pathname সরাসরি চেক করা হচ্ছে
+          const active = pathname === href;
 
           return (
             <Link
