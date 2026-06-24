@@ -49,6 +49,8 @@ export default function RegisterPage() {
 
     // console.log(data);
 
+    const subscription = data.role === 'buyer' ? 'collector_free' : "none";
+
 
   try {
     const imageFile = data.image[0];
@@ -62,6 +64,7 @@ export default function RegisterPage() {
         name: data.name,
         image: imageUrl,
         role: data.role,
+        subscription: subscription
       });
 
       console.log(signUpData, signUpError);

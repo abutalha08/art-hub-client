@@ -8,6 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { getBuyerStats } from "@/lib/api/purchases/data";
+import { getSubscriptionById } from "@/lib/api/subscriptions";
 
 export default function BuyNowWidget({
   price = 0,
@@ -20,11 +21,36 @@ export default function BuyNowWidget({
 
   const user = session?.user;
 
-  // subscription plan (FREE)
-  const plan = {
-    name: "free",
-    maxPurchase: 5,
+  // const subscription1 = getSubscriptionById(user?.subscription || 'collector_free');
+  // console.log(subscription1);
+
+  const [subscription, setSubscription] = useState(null);
+
+useEffect(() => {
+  const loadSubscription = async () => {
+    if (!user) return;
+
+    try {
+      const data = await getSubscriptionById(
+        user.subscription || "collector_free"
+      );
+
+      setSubscription(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  loadSubscription();
+}, [user]);
+
+console.log(subscription)
+
+  // subscription plan (FREE)
+  // const plan = {
+  //   name: "free",
+  //   maxPurchase: 3,
+  // };
 
   const [purchaseCount, setPurchaseCount] = useState(0);
 
@@ -48,7 +74,7 @@ export default function BuyNowWidget({
 
   const isBuyer = user?.role === "buyer";
 
-  const isLimitReached = purchaseCount >= plan.maxPurchase;
+  const isLimitReached = purchaseCount >= subscription?.maxPurchase;
 
   const handleBuy = async () => {
     if (!user) {
@@ -63,7 +89,7 @@ export default function BuyNowWidget({
 
     // ❌ BLOCK IF LIMIT REACHED
     if (isLimitReached) {
-      toast.error("Purchase limit reached. Upgrade your plan.");
+      toast.error("Purchase limit reached. Upgrade your subscription.");
       return;
     }
 
@@ -143,7 +169,7 @@ export default function BuyNowWidget({
         {/* DEBUG (optional remove later) */}
         {user && isBuyer && (
           <p className="text-xs text-slate-500 text-center">
-            {purchaseCount} / {plan.maxPurchase} artworks purchased
+            {purchaseCount} / {subscription?.maxPurchase} artworks purchased
           </p>
         )}
 

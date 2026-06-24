@@ -26,6 +26,7 @@ export async function POST(request) {
         },
       ],
       mode: 'subscription',
+      metadata: {subscriptionId},
       success_url: `${origin}/dashboard/buyer/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
     });
     return NextResponse.redirect(session.url, 303)

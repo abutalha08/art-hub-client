@@ -1,3 +1,4 @@
+import { createSubscribe } from '@/lib/actions/subscribes'
 import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
 import { FiCheckCircle, FiArrowRight, FiMail } from 'react-icons/fi'
@@ -10,7 +11,8 @@ export default async function Success({ searchParams }) {
 
   const {
     status,
-    customer_details: { email: customerEmail }
+    customer_details: { email: customerEmail },
+    metadata
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ['line_items', 'payment_intent']
   })
@@ -20,6 +22,15 @@ export default async function Success({ searchParams }) {
   }
 
   if (status === 'complete') {
+
+    const subsInfo = {
+      email: customerEmail,
+      subscriptionId: metadata.subscriptionId
+    }
+
+    //Update the user table about the new plan
+    const result = await createSubscribe(subsInfo);
+    console.log(result);
     return (
       <div className="min-h-screen bg-[#050508] flex items-center justify-center p-6 text-white selection:bg-purple-500/30">
         

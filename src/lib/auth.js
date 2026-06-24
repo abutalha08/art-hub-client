@@ -20,11 +20,8 @@ export const auth = betterAuth({
       role: {
         defaultValue: 'buyer',
       },
-      isBlocked: {
-        defaultValue: false,
-      },
-      isPremium: {
-        defaultValue: false,
+  subscription: {
+        defaultValue: 'collector_free',
       }
   },
 },
