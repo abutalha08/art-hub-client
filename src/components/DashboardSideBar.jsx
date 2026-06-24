@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   FaUserCircle,
@@ -19,29 +19,95 @@ import {
 import { Button, Drawer } from "@heroui/react";
 import Logo from "./Logo";
 import Image from "next/image";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { MdDashboard, MdOutlineSubscriptions } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
+import toast from "react-hot-toast";
 
 const MENU_BY_ROLE = {
   user: [
-    { key: "overview", label: "Overview", icon: MdDashboard, href: "/dashboard/buyer" },
-    { key: "Purchase History", label: "Purchase History", icon: FaHistory, href: "/dashboard/buyer/purchase-history" },
-    { key: "Bought Artworks", label: "Bought Artworks", icon: FaShoppingCart, href: "/dashboard/buyer/bought-artworks" },
-    { key: "Profile Management", label: "Profile Management", icon: CgProfile, href: "/dashboard/buyer/profile" },
-    { key: "Subscription Tier Overview", label: "Subscription Tier Overview", icon: MdOutlineSubscriptions , href: "/dashboard/buyer/subscription" },
+    {
+      key: "overview",
+      label: "Overview",
+      icon: MdDashboard,
+      href: "/dashboard/buyer",
+    },
+    {
+      key: "Purchase History",
+      label: "Purchase History",
+      icon: FaHistory,
+      href: "/dashboard/buyer/purchase-history",
+    },
+    {
+      key: "Bought Artworks",
+      label: "Bought Artworks",
+      icon: FaShoppingCart,
+      href: "/dashboard/buyer/bought-artworks",
+    },
+    {
+      key: "Profile Management",
+      label: "Profile Management",
+      icon: CgProfile,
+      href: "/dashboard/buyer/profile",
+    },
+    {
+      key: "Subscription Tier Overview",
+      label: "Subscription Tier Overview",
+      icon: MdOutlineSubscriptions,
+      href: "/dashboard/buyer/subscription",
+    },
   ],
   artist: [
-    { key: "overview", label: "Overview", icon: FaPalette, href: "/dashboard/artist" },
-    { key: "add-artworks", label: "Add Artwork", icon: FaPlus, href: "/dashboard/artist/add-artworks" },
-    { key: "manage-artworks", label: "Manage Artworks", icon: FaImage, href: "/dashboard/artist/manage-artworks" },
-    { key: "sales", label: "Sales History", icon: FaShoppingCart, href: "/dashboard/artist/sales" },
-    { key: "profile", label: "Artist Profile", icon: FaShoppingCart, href: "/dashboard/artist/profile" },
+    {
+      key: "overview",
+      label: "Overview",
+      icon: FaPalette,
+      href: "/dashboard/artist",
+    },
+    {
+      key: "add-artworks",
+      label: "Add Artwork",
+      icon: FaPlus,
+      href: "/dashboard/artist/add-artworks",
+    },
+    {
+      key: "manage-artworks",
+      label: "Manage Artworks",
+      icon: FaImage,
+      href: "/dashboard/artist/manage-artworks",
+    },
+    {
+      key: "sales",
+      label: "Sales History",
+      icon: FaShoppingCart,
+      href: "/dashboard/artist/sales",
+    },
+    {
+      key: "profile",
+      label: "Artist Profile",
+      icon: CgProfile,
+      href: "/dashboard/artist/profile",
+    },
   ],
   admin: [
-    { key: "users", label: "Manage Users", icon: FaUsers, href: "/dashboard/users" },
-    { key: "artworks", label: "Approve Artworks", icon: FaImage, href: "/dashboard/artworks" },
-    { key: "reports", label: "Reports & Analytics", icon: FaUserShield, href: "/dashboard/reports" },
+    {
+      key: "users",
+      label: "Manage Users",
+      icon: FaUsers,
+      href: "/dashboard/users",
+    },
+    {
+      key: "artworks",
+      label: "Approve Artworks",
+      icon: FaImage,
+      href: "/dashboard/artworks",
+    },
+    {
+      key: "reports",
+      label: "Reports & Analytics",
+      icon: FaUserShield,
+      href: "/dashboard/reports",
+    },
   ],
 };
 
@@ -50,6 +116,24 @@ export default function DashboardSidebar() {
   const role = session?.user?.role;
 
   const pathname = usePathname();
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const loadingToast = toast.loading("Logging out...");
+
+    try {
+      await authClient.signOut();
+
+      toast.success("Logged out successfully!");
+      router.push("/");
+    } catch (error) {
+      toast.error("Logout failed!");
+      console.error("Logout failed:", error);
+    } finally {
+      toast.dismiss(loadingToast);
+    }
+  };
 
   const menuItems = MENU_BY_ROLE[role] || MENU_BY_ROLE.user;
 
@@ -146,7 +230,10 @@ export default function DashboardSidebar() {
           Back to ArtHub
         </Link>
 
-        <button className="flex items-center gap-3 px-3 py-3 rounded-2xl text-sm text-[#F242C2] hover:bg-[#F242C2]/10 transition w-full text-left">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-3 rounded-2xl text-sm text-[#F242C2] hover:bg-[#F242C2]/10 transition w-full text-left"
+        >
           <span className="w-9 h-9 flex items-center justify-center rounded-xl bg-[#12121C]">
             <FaSignOutAlt size={13} />
           </span>
