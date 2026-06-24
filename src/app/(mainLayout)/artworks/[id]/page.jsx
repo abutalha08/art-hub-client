@@ -165,6 +165,7 @@ export default async function ArtworkDetailsPage({ params }) {
               <BuyNowWidget
                 price={artwork?.price}
                 artworkId={artwork?._id}
+                title={artwork?.title}
                
               />
             </div>
