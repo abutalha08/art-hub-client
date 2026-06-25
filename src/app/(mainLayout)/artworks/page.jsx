@@ -5,8 +5,29 @@ import ArtworkCard from "@/components/ArtworkCard";
 import { fetchArtworks } from "@/lib/api/artworks/data";
 
 
-export default async function BrowseArtworksPage() {
-  const artworks = await fetchArtworks();
+export default async function BrowseArtworksPage({ searchParams }) {
+   const sParams = await searchParams;
+    // console.log(sParams);
+    const search = sParams.search || "";
+    const category = sParams.category || "";
+    const sort = sParams.sort || "";
+
+    // console.log(search, category);
+
+    const params = new URLSearchParams();
+    if (search) {
+        params.set("search", search);
+    }
+    if (category) {
+        params.set("category", category);
+    }
+    if (sort) {
+  params.set("sort", sort);
+}
+    
+    // console.log(params.toString());
+
+  const artworks = await fetchArtworks(params);
 
   return (
     <div className="min-h-screen py-8 sm:py-12 lg:py-16 px-4 sm:px-6 max-w-7xl mx-auto w-full space-y-8 lg:space-y-12">

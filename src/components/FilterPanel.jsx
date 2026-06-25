@@ -13,13 +13,10 @@ import {
   ListBox,
   ListBoxItem,
 } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import {
-  FaSearch,
-  FaSlidersH,
-  FaUndoAlt,
-  FaDollarSign,
-} from "react-icons/fa";
+import { FaSearch, FaSlidersH, FaUndoAlt, FaDollarSign } from "react-icons/fa";
 
 const CATEGORIES = [
   "All Categories",
@@ -33,6 +30,36 @@ const CATEGORIES = [
 ];
 
 export default function FilterPanel() {
+
+  const [search, setSearch] = useState("");
+const [category, setCategory] = useState("");
+const [sort, setSort] = useState("");
+
+const router = useRouter();
+
+  console.log(search, category);
+
+  const handleApplyFilters = () => {
+    const params = new URLSearchParams();
+    if (search) {
+      params.set("search", search);
+    }
+    if (category) {
+      params.set("category", category);
+    }
+    if (sort) {
+    params.set("sort", sort);
+  }
+    router.push(`/artworks?${params.toString()}`);
+  };
+  const handleReset = () => {
+    setSearch("");
+    setCategory("");
+    setSort("");
+
+    router.push("/artworks")
+  }
+
   return (
     <Card
       className="
@@ -70,6 +97,10 @@ export default function FilterPanel() {
             Search Artwork
           </Label>
           <Input
+
+          value={search}
+            onChange={e => setSearch(e.target.value)}
+            id="search-title"
             placeholder="Search by title..."
             startContent={
               <FaSearch className="text-[#A78BFA] text-xs opacity-80 group-focus-within:opacity-100 transition-opacity" />
@@ -77,66 +108,66 @@ export default function FilterPanel() {
             classNames={{
               inputWrapper:
                 "bg-[#0D0D16] h-11 border border-[#27273A]/60 rounded-xl hover:border-[#B342F2]/40 focus-within:border-[#B342F2] focus-within:shadow-[0_0_15px_rgba(179,66,242,0.15)] transition-all duration-300",
-              input: "text-white placeholder:text-[#52526B] text-sm font-medium",
+              input:
+                "text-white placeholder:text-[#52526B] text-sm font-medium",
             }}
           />
         </div>
 
         {/* 🎨 CATEGORY SELECT */}
         <div className="flex flex-col gap-2.5 w-full">
-          <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#8E8E9F]/80 pl-1">
+          <Label htmlFor="filter-category" className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#8E8E9F]/80 pl-1">
             Category
           </Label>
-          <Select
-            aria-label="Category"
-            placeholder="Select category"
-          >
-            <SelectTrigger className="bg-[#0D0D16] border border-[#27273A]/60 rounded-xl hover:border-[#B342F2]/40 focus-within:border-[#B342F2] h-11 text-white font-medium text-sm transition-all duration-300">
-              <SelectValue className="text-white placeholder:text-[#52526B]" />
-              <SelectIndicator className="text-[#8E8E9F]" />
-            </SelectTrigger>
+          
+          <div className="relative group">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full h-12 bg-slate-900/60 border border-white/10 rounded-xl px-3 text-white text-sm outline-none focus:border-blue-500"
+            >
+              <option value="">All Categories</option>
 
-            <SelectPopover className="bg-[#0A0A12] border border-[#27273A]/80 rounded-xl shadow-[0_15px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl p-1">
-              <ListBox className="p-0">
-                {CATEGORIES.map((cat) => (
-                  <ListBoxItem
-                    key={cat}
-                    id={cat}
-                    textValue={cat}
-                    className="text-[#D1D1DB] font-medium text-sm rounded-lg hover:bg-[#B342F2]/10 hover:text-white data-[hover=true]:bg-[#B342F2]/10 data-[hover=true]:text-white transition-colors py-2 px-3"
-                  >
-                    {cat}
-                  </ListBoxItem>
-                ))}
-              </ListBox>
-            </SelectPopover>
-          </Select>
+              {CATEGORIES.map((cat) => (
+                <option
+                  key={cat}
+                  value={cat}
+                  className="bg-slate-900 text-white"
+                >
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* 💰 MAX PRICE */}
+        {/* sorting */}
         <div className="flex flex-col gap-2.5 w-full">
           <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#8E8E9F]/80 pl-1">
-            Max Price
-          </Label>
-          <Input
-            type="number"
-            placeholder="Enter price"
-            startContent={
-              <FaDollarSign className="text-[#A78BFA] text-xs opacity-80" />
-            }
-            classNames={{
-              inputWrapper:
-                "bg-[#0D0D16] h-11 border border-[#27273A]/60 rounded-xl hover:border-[#B342F2]/40 focus-within:border-[#B342F2] focus-within:shadow-[0_0_15px_rgba(179,66,242,0.15)] transition-all duration-300",
-              input: "text-white placeholder:text-[#52526B] text-sm font-medium",
-            }}
-          />
+    Sort By
+  </Label>
+
+  <select
+    value={sort}
+    onChange={(e) => setSort(e.target.value)}
+    className="w-full h-12 bg-slate-900/60 border border-white/10 rounded-xl px-3 text-white text-sm outline-none focus:border-blue-500"
+  >
+    <option value="">Newest</option>
+    <option value="price-low-high">
+      Price: Low → High
+    </option>
+    <option value="price-high-low">
+      Price: High → Low
+    </option>
+  </select>
         </div>
 
         {/* ⚡ CONTROL BUTTONS */}
         <div className="flex gap-3 w-full">
           {/* APPLY BUTTON */}
-         <Button
-  className="
+          <Button
+          onClick={handleApplyFilters}
+            className="
     flex-1
     h-11
     rounded-xl
@@ -156,15 +187,19 @@ export default function FilterPanel() {
     transition-all
     duration-300
   "
-  startContent={<FaSlidersH size={12} className="mr-0.5 text-[#C4B5FD]" />}
->
-  Apply
-</Button>
+            startContent={
+              <FaSlidersH size={12} className="mr-0.5 text-[#C4B5FD]" />
+            }
+          >
+            Apply
+          </Button>
 
           {/* RESET BUTTON */}
           <Button
+          onClick={handleReset}
             isIconOnly
             variant="light"
+            title="Reset Filters"
             className="
               h-11
               w-11

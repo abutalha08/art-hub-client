@@ -53,7 +53,7 @@ export default async function BoughtArtworksPage() {
                 </p>
 
                 <Link
-                  href={`/artworks/${artwork.artworkId}`}
+                  href={`/artworks/${artwork?.artworkId}`}
                   className="inline-block w-full text-center py-2 rounded-xl bg-gradient-to-r from-[#7928CA] via-[#B342F2] to-[#F242C2] text-white font-medium"
                 >
                   View Details

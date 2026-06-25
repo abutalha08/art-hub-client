@@ -8,8 +8,8 @@ export const myArtworks = async (email) => {
 
   return result;
 };
-export const fetchArtworks = async () => {
-  const result = await serverFetch(`/api/artworks`);
+export const fetchArtworks = async (query) => {
+  const result = await serverFetch(`/api/artworks?${query}`);
 
   return result;
 };
