@@ -80,7 +80,7 @@ export default function CallToAction() {
             </Link>
 
             {/* SECONDARY */}
-            <Link href="/browse" className="w-full sm:w-auto">
+            <Link href="/artworks" className="w-full sm:w-auto">
               <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   radius="xl"
