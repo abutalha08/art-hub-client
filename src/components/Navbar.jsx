@@ -185,12 +185,12 @@ export default function Navbar() {
                     <FiGrid className="text-sm" /> Dashboard
                   </Link>
 
-                  <Link
+                  {/* <Link
                     href="/dashboard"
                     className="flex items-center gap-2.5 px-3 py-2 hover:bg-[#161622] text-[#8E8E9F] hover:text-white rounded-lg transition"
                   >
                     <FiUser className="text-sm" /> Profile
-                  </Link>
+                  </Link> */}
 
                   <button
                     onClick={handleLogout}
@@ -263,7 +263,7 @@ export default function Navbar() {
           {/*  Dashboard only when logged in */}
           {user && (
             <Link
-              href="/dashboard"
+              href={`/dashboard/${session?.user?.role}`}
               onClick={() => setMobileOpen(false)}
               className={`px-4 py-3 rounded-xl text-sm font-medium transition ${
                 pathname.startsWith("/dashboard")
