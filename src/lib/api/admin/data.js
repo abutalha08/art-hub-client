@@ -12,3 +12,10 @@ export const getAllTransactions =
     "/api/admin/analytics"
   );
 };
+
+export const getAdminCharts =
+  async () => {
+    return await serverFetch(
+      "/api/admin/charts"
+    );
+  };

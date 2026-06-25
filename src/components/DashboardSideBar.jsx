@@ -20,9 +20,12 @@ import { Button, Drawer } from "@heroui/react";
 import Logo from "./Logo";
 import Image from "next/image";
 import { authClient, useSession } from "@/lib/auth-client";
-import { MdDashboard, MdOutlineSubscriptions } from "react-icons/md";
+import { MdDashboard, MdManageHistory, MdOutlineSubscriptions } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import toast from "react-hot-toast";
+import { FaChartPie } from "react-icons/fa6";
+import { IoAnalytics } from "react-icons/io5";
+import { GrTransaction } from "react-icons/gr";
 
 const MENU_BY_ROLE = {
   user: [
@@ -99,26 +102,26 @@ const MENU_BY_ROLE = {
     {
       key: "Manage All Artworks",
       label: "Manage All Artworks",
-      icon: FaImage,
+      icon: MdManageHistory,
       href: "/dashboard/admin/manage-all-artworks", // অথবা তোমার রাউট অনুযায়ী
     },
     {
       key: "View All Transactions",
       label: "View All Transactions",
-      icon: FaUserShield,
+      icon: GrTransaction,
       href: "/dashboard/admin/view-transactions",
     },
     {
       key: "Analytics Overview",
       label: "Analytics Overview",
-      icon: FaUserShield,
+      icon: IoAnalytics,
       href: "/dashboard/admin/analytics-overview",
     },
     {
       key: "Charts",
       label: "Charts",
-      icon: FaUserShield,
-      href: "/dashboard/admin/Charts",
+      icon: FaChartPie,
+      href: "/dashboard/admin/charts",
     },
   ],
 };
