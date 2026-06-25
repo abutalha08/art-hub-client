@@ -6,3 +6,9 @@ export const getAllTransactions =
       "/api/admin/transactions"
     );
   };
+
+  export const getAdminAnalytics = async () => {
+  return await serverFetch(
+    "/api/admin/analytics"
+  );
+};
