@@ -83,6 +83,16 @@ export default function RegisterPage() {
 };
     // console.log(errors);
 
+    const handleGoogleSignUp = async() => {
+
+    toast.loading("Redirecting to Google...");
+
+    await authClient.signIn.social({
+        provider: "google"
+    })
+
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -132,7 +142,7 @@ export default function RegisterPage() {
           <Card className="w-full max-w-xl border border-[#27273A]/40 bg-[#12121C]/85 backdrop-blur-2xl shadow-[0_30px_120px_rgba(0,0,0,0.75)] rounded-2xl p-6">
             {/* HEADER */}
             <CardHeader className="flex flex-col gap-5 items-start pb-8">
-              <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7928CA] to-[#B342F2] flex items-center justify-center shadow-lg shadow-[#7928CA]/25">
                   <IoColorPaletteSharp className="text-white text-xl" />
                 </div>
@@ -140,7 +150,7 @@ export default function RegisterPage() {
                 <span className="text-2xl font-bold tracking-wide bg-gradient-to-r from-white via-[#E032C4] to-[#B342F2] bg-clip-text text-transparent">
                   ArtHub
                 </span>
-              </div>
+              </Link>
 
               <h1 className="text-4xl font-semibold text-white tracking-tight leading-snug">
                 Create your account
@@ -323,6 +333,7 @@ export default function RegisterPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
+                onClick={handleGoogleSignUp}
                 className="w-full flex items-center justify-center gap-2 border border-[#27273A]/60 hover:bg-[#161622]/50 text-white rounded-xl h-11 transition"
               >
                 <FcGoogle className="text-xl" />

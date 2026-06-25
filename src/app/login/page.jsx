@@ -64,6 +64,14 @@ export default function LoginPage() {
   };
   // console.log(errors);
 
+  const handleGoogleSignIn = async () => {
+    toast.loading("Redirecting to Google...");
+
+    await authClient.signIn.social({
+        provider: 'google'
+    });
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -125,12 +133,11 @@ export default function LoginPage() {
               </Link>
 
               <h1 className="text-4xl font-semibold text-white tracking-tight leading-snug">
-                Create your account
+                Welcome Back to ArtHub
               </h1>
 
               <p className="text-[#8E8E9F] text-sm leading-relaxed max-w-md">
-                Join thousands of artists and collectors on ArtHub and start
-                your creative journey today.
+                 Login to explore original artworks, connect with talented artists, and manage your ArtHub experience from one place.
               </p>
             </CardHeader>
 
@@ -216,6 +223,7 @@ export default function LoginPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
+                onClick={handleGoogleSignIn}
                 className="w-full flex items-center justify-center cursor-pointer gap-2 border border-[#27273A]/60 hover:bg-[#161622]/50 text-white rounded-xl h-11 transition"
               >
                 <FcGoogle className="text-xl" />
