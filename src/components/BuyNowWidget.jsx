@@ -116,12 +116,20 @@ export default function BuyNowWidget({
 
         {/* Limit Reached */}
         {user && isBuyer && subscription && isLimitReached && (
-          <div className="w-full min-h-12 flex flex-col items-center justify-center bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 text-center">
-            <p>🚫 Purchase limit reached</p>
-
-            <p className="text-xs text-slate-400 mt-1">
-              Upgrade your subscription to continue buying
+          <div className="w-full flex flex-col items-center justify-center bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-4 text-center">
+            <p className="text-red-400 text-sm font-medium">
+              🚫 Purchase limit reached
             </p>
+
+            <p className="text-xs text-slate-400 mt-1 mb-4">
+              Upgrade your subscription to continue buying artworks
+            </p>
+
+            <Link href="/dashboard/buyer/subscription" className="w-full">
+              <button className="w-full h-11 bg-gradient-to-r from-[#7928CA] via-[#B342F2] to-[#F242C2] text-white font-semibold rounded-xl hover:opacity-90 transition cursor-pointer">
+                Upgrade Subscription
+              </button>
+            </Link>
           </div>
         )}
 
