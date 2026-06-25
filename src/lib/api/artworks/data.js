@@ -24,8 +24,3 @@ export const getFeaturedArtworks = async () => {
 };
 
 
-// export const fetchFeaturedEvents = async () => {
-//   const result = await serverFetch(`/api/events/featured`);
-
-//   return result;
-// };
