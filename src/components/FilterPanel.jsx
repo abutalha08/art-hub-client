@@ -50,6 +50,9 @@ const router = useRouter();
     if (sort) {
     params.set("sort", sort);
   }
+
+  params.set("page", "1");
+  
     router.push(`/artworks?${params.toString()}`);
   };
   const handleReset = () => {

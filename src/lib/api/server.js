@@ -2,8 +2,8 @@ import { baseURL } from './baseUrl';
 
 export const serverMutation = async (path, method, data) => {
   //   console.log(data);
-    console.log(" serverMutation CALLED");
-  console.log("HITTING:", `${baseURL}${path}`);
+    // console.log(" serverMutation CALLED");
+  // console.log("HITTING:", `${baseURL}${path}`);
 
   const res = await fetch(`${baseURL}${path}`, {
     
