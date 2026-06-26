@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
 
-## Getting Started
+  # 🎨 ArtHub – Online Art Marketplace
+  
+  **A Premium Full-Stack Digital Platform for Art Enthusiasts, Collectors, and Global Artists.**
 
-First, run the development server:
+  [![Vercel Deployment](https://img.shields.io/badge/Deployed%20With-Vercel-black?style=for-the-badge&logo=vercel)](https://your-live-link.vercel.app)
+  [![Node.js Version](https://img.shields.io/badge/Node.js->=18.0.0-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+  [![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  ---
+  
+  [🌐 Live Production Website](https://art-hub-client-henna.vercel.app) 
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📌 Project Overview & Purpose
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Traditional art buying is often restricted to physical galleries and local exhibitions, limiting emerging artists from reaching a global audience. **ArtHub** is a sophisticated, decentralized marketplace designed to democratize art commerce. 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Built using modern MERN and Serverless paradigms, it connects collectors with creators under a highly secure ecosystem. Buyers can browse masterpieces, track purchase limits dynamically based on subscription tiers, and execute seamless payments. Artists enjoy absolute autonomy over their portfolio via dedicated CRUD studios, while full platform audits are handled comprehensively by an automated Admin Control Dashboard.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Premium Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project leverages a highly optimized, modern tech stack engineered for scalability, speed, and exceptional user experience:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* **Frontend Architecture:** **Next.js 15 (App Router)** – Utilizing Server Components for fast initial loads and robust hydration safeguards.
+* **Styling & UI Components:** **Tailwind CSS** & **HeroUI** – Ensuring a high-contrast, premium dark visual harmony, perfect grid alignments, and a flawless responsive layout.
+* **State & Authentication:** **BetterAuth** – Driving enterprise-grade, secure session management for regular and Google OAuth paths.
+* **Database Management:** **MongoDB** – A high-performance, non-relational document store mapped for rapid multi-collection queries.
+* **Server-Side API Gateway:** **Express.js** – A highly modular runtime router layer processing strict business logics and role validations.
+* **Micro-Interactions & Animations:** **Framer Motion** – Creating eye-catching, fluid transitions and premium user engagement across elements.
+* **Dynamic Notifications:** **React Hot Toast** – Injecting real-time, lightweight, responsive status alerts for client actions.
+* **Asset Visuals:** **React Icons** – Lightweight, pixel-perfect icon metrics maintaining typography structure.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💎 Role-Based Features & System Architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🛍️ 1. Buyer (User) Experience & Tier Management
+* **Flexible Marketplace Browsing:** Complete freedom to explore global artworks with lightning-fast dynamic searching, category filtering, and structural multi-criteria sorting (Price High-Low, Newest) without requiring initial login.
+* **Stripe Gateway Subscriptions:** Seamless checkout infrastructure allowing buyers to instantly scale their account profiles from the **Free Tier** (Max 3 purchases allowed) to **Pro** ($9.99/mo, 9 purchases) or **Premium** ($19.99/mo, Unlimited purchases).
+* **Smart Quota Interceptor:** Automated backend validations systematically block new Stripe billing sessions if a client goes beyond their structural tier boundaries.
+* **Verified-Buyer Feedback System:** An algorithmic trust gate (`POST /api/artworks/:id/comments`) that explicitly verifies user purchase histories in the database before accepting comments, completely eliminating fraudulent reviews.
+* **Comprehensive Collection Hub:** A personal dashboard tracking historical payment invoices, detailed transaction timelines, and a visual collection gallery of all acquired masterpieces.
+
+### 🎨 2. Artist Portfolio Studio & Inventory Controls
+* **Absolute CRUD Autonomy:** Dedicated digital workspace allowing verified artists to seamlessly upload masterpieces, modify active pricing structures, update descriptions, or remove listings from the marketplace.
+* **Cloud-Optimized Media Pipeline:** Integrated directly with the `imgBB API` to handle heavy image file streams securely, storing high-contrast preview assets on the cloud.
+* **Live Commercial Spreadsheets:** Real-time financial ledger tables displaying precise historical buyer identities, individual transaction amounts, exact purchase dates, and automated revenue indicators.
+* **Context-Aware Protections:** Intelligent button states automatically prevent or disable purchase actions on artwork detail pages if the logged-in profile belongs to the owning artist themselves.
+
+### 🛡️ 3. Centralized Admin Command Center
+* **Operational Analytics Stream:** Rich data summaries mapping total active platform users, registered creative artists, aggregate units sold, and total cumulative revenue metrics.
+* **Interactive Dynamic Visualizations:** Rendered beautifully via `Recharts`, providing instantaneous charts on categorical artwork frequency distributions and platform sales trends.
+* **User Management Matrices:** High-level access switches to update, mitigate, or revoke client platform permissions instantly (User ⇄ Artist ⇄ Admin).
+* **Global Inventory & Audit Control:** Centralized oversight to monitor platform-wide listings with authority to remove standard-breaking artworks, and audit dual transaction types (Subscription Upgrades & Product Purchases).
+
+---
+
